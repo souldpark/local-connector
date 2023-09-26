@@ -17,13 +17,15 @@
       "node_modules/@pokusew/pcsclite/**/*"
     ],
     "targets": [
-      "node16-win-x64"
+      "node18-win-x64",
+      "node18-linux"
     ]
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@taptrack/ndef": "^1.0.3",
     "axios": "^1.5.0",
     "dotenv": "^16.3.1",
     "html-pdf-node": "^1.0.8",
@@ -35,6 +37,7 @@
     "pdf-to-printer": "^5.6.0",
     "reflect-metadata": "^0.1.13",
     "serialport": "^12.0.0",
+    "smartcard": "^1.0.46",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {
@@ -44,6 +47,7 @@
     "gulp": "^4.0.2",
     "gulp-rimraf": "^1.0.0",
     "gulp-run": "^1.7.1",
+    "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   }
 }

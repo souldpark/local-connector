@@ -2,7 +2,7 @@ import { inject, injectable } from 'inversify';
 import { SerialPort } from 'serialport'
 import { ConfigService } from './config.service';
 import { SocketService } from './socket.service';
-import { NFC } from 'nfc-pcsc';
+import { NFC, TAG_ISO_14443_3, KEY_TYPE_A } from 'nfc-pcsc';
 
 @injectable()
 export class WorkerService {
@@ -48,62 +48,86 @@ export class WorkerService {
         return serialPort;
     }
 
+    decodeATR(atrBuffer) {
+        const atr = {
+            ts: atrBuffer[0], // Initial character (TS)
+            t0: atrBuffer[1], // Format byte (T0)
+            historicalBytes: [], // Historical bytes (optional)
+        };
+
+        // If there are historical bytes (T0 indicates so), extract them
+        if (atr.t0 & 0x10) {
+            const historicalLength = atrBuffer[atrBuffer.length - 1];
+            atr.historicalBytes = atrBuffer.slice(2, 2 + historicalLength);
+        }
+        console.log(atr)
+        return atr;
+    }
 
     public async initializeNFC() {
-        const response = {
-            atr: Buffer.from([0x3b, 0x8f, 0x80, 0x01, 0x80, 0x4f, 0x0c, 0xa0, 0x00, 0x00, 0x03, 0x06, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6a]),
-            standard: 'TAG_ISO_14443_3',
-            type: 'TAG_ISO_14443_3',
-            uid: 'f7eea4c3'
-          };
-          
-          const atrString = response.atr.toString('hex'); // Convert buffer to hexadecimal string
-          console.log(atrString);
-          
-        let deviceNfc = this.configService.get("device.nfc")
-        if (deviceNfc) {
-            const nfc = new NFC();
+        // const response = {
+        //     atr: Buffer.from([0x3b, 0x8f, 0x80, 0x01, 0x80, 0x4f, 0x0c, 0xa0, 0x00, 0x00, 0x03, 0x06, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6a]),
+        //     standard: 'TAG_ISO_14443_3',
+        //     type: 'TAG_ISO_14443_3',
+        //     uid: 'f7eea4c3'
+        //   };
 
-            nfc.on('reader', reader => {
-                console.log(`${reader.reader.name}  device attached`);
+        //   const atrString = response.atr.toString('hex'); // Convert buffer to hexadecimal string
+        //   console.log(atrString);
 
-                // enable when you want to auto-process ISO 14443-4 tags (standard=TAG_ISO_14443_4)
-                // when an ISO 14443-4 is detected, SELECT FILE command with the AID is issued
-                // the response is available as card.data in the card event
-                // see examples/basic.js line 17 for more info
-                // reader.aid = 'F222222222';
+        // let deviceNfc = this.configService.get("device.nfc")
+        // console.log(deviceNfc)
+        // if (deviceNfc) {
+        const nfc = new NFC();
 
-                reader.on('card', card => {
+        nfc.on('reader', reader => {
+            reader.autoProcessing = false;
 
-                    // card is object containing following data
-                    // [always] String type: TAG_ISO_14443_3 (standard nfc tags like MIFARE) or TAG_ISO_14443_4 (Android HCE and others)
-                    // [always] String standard: same as type
-                    // [only TAG_ISO_14443_3] String uid: tag uid
-                    // [only TAG_ISO_14443_4] Buffer data: raw data from select APDU response
+            reader.on('card', async card => {
+                if (card.type === TAG_ISO_14443_3) {
+                    const key = 'FFFFFFFFFFFF';
+                    const keyType = KEY_TYPE_A;
+                    const sector = 5
+                    try {
+                        await reader.authenticate(sector, keyType, key);
 
-                    console.log(`${reader.reader.name}  card detected`, card);
+                        const data = await reader.read(sector, 16, 16);
 
-                    console.log("CARD NUMBER: " + card.atr.toString('utf8'))
+                        const cardNumber = Buffer.from(data.slice(0, 14), 'hex').toString('utf8');
 
-                });
+                        this.socketService.emit('card-scanned', cardNumber)
 
-                // reader.on('card.off', card => {
-                //     console.log(`${reader.reader.name}  card removed`, card);
-                // });
-
-                reader.on('error', err => {
-                    console.log(`${reader.reader.name}  an error occurred`, err);
-                });
-
-                reader.on('end', () => {
-                    console.log(`${reader.reader.name}  device removed`);
-                });
-
+                        //SECTOR 3: 000000000000ff078069ffffffffffff
+                        //SECTOR 4: 5a38374150504b3550394c4400000000
+                        //SECTOR 5: 31323939383039320000000000000000
+                        //SECTOR 7: 000000000000ff078069ffffffffffff
+                        //11 000000000000ff078069ffffffffffff
+                        //15 000000000000ff078069ffffffffffff
+                        // Print the data
+                        // console.log(`Data from ${reader.reader.name}:`, data.toString('hex'));
+                    } catch (err) {
+                        console.error(`Error when reading card`, err);
+                    }
+                }
             });
 
-            nfc.on('error', err => {
-                console.log('an error occurred', err);
+            reader.on('card.off', card => {
+                // console.log(`${reader.reader.name}  card removed`, card);
             });
-        }
+
+            reader.on('error', err => {
+                console.log(`${reader.reader.name}  an error occurred`, err);
+            });
+
+            reader.on('end', () => {
+                // console.log(`${reader.reader.name}  device removed`);
+            });
+
+        });
+
+        nfc.on('error', err => {
+            console.log('an error occurred', err);
+        });
     }
+    // }
 }

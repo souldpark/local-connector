@@ -7,11 +7,13 @@ export class ConfigService {
   constructor() {
     const configFilePath = path.join(process.cwd(), 'default.json');
 
+
     nconf.file({ file: configFilePath });
 
     nconf.defaults({
       nfc: false
     });
+
   }
 
   public get(key: string) {
