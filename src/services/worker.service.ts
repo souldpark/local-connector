@@ -25,7 +25,11 @@ export class WorkerService {
         }
         if (scanner) {
             this.scannerPort = this.initializePort(scanner.port, scanner.boundRate, (data: any) => {
-                this.socketService.emit('card-scanned', data.toString("utf8"))
+                let matches = data.toString("utf8").match(/(\d+)/);
+
+                if (matches) {
+                    this.socketService.emit('card-scanned', matches[0])
+                }
             })
         }
     }
@@ -36,9 +40,9 @@ export class WorkerService {
             baudRate: boundRate,
         });
 
-        serialPort.on('readable', () => {
-            console.log(`[${port}] Readable Data:`, serialPort.read().toString("utf8"));
-        });
+        // serialPort.on('readable', () => {
+        //     console.log(`[${port}] Readable Data:`, serialPort.read().toString("utf8"));
+        // });
 
         serialPort.on('data', onData);
 
@@ -60,28 +64,15 @@ export class WorkerService {
             const historicalLength = atrBuffer[atrBuffer.length - 1];
             atr.historicalBytes = atrBuffer.slice(2, 2 + historicalLength);
         }
-        console.log(atr)
+
         return atr;
     }
 
     public async initializeNFC() {
-        // const response = {
-        //     atr: Buffer.from([0x3b, 0x8f, 0x80, 0x01, 0x80, 0x4f, 0x0c, 0xa0, 0x00, 0x00, 0x03, 0x06, 0x03, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x6a]),
-        //     standard: 'TAG_ISO_14443_3',
-        //     type: 'TAG_ISO_14443_3',
-        //     uid: 'f7eea4c3'
-        //   };
-
-        //   const atrString = response.atr.toString('hex'); // Convert buffer to hexadecimal string
-        //   console.log(atrString);
-
-        // let deviceNfc = this.configService.get("device.nfc")
-        // console.log(deviceNfc)
-        // if (deviceNfc) {
         const nfc = new NFC();
 
         nfc.on('reader', reader => {
-            
+
             reader.autoProcessing = false;
 
             reader.on('card', async card => {
@@ -97,12 +88,12 @@ export class WorkerService {
                         const cardNumber = Buffer.from(data.slice(0, 14), 'hex').toString('utf8');
 
                         let matches = cardNumber.match(/(\d+)/);
-     
+
                         if (matches) {
-                            this.socketService.emit('card-scanned', matches[0])
+                            this.socketService.emit('card-scanned', matches[0].substring(0, 7))
                         }
 
-                        
+
 
                         //SECTOR 3: 000000000000ff078069ffffffffffff
                         //SECTOR 4: 5a38374150504b3550394c4400000000
