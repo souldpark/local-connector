@@ -81,6 +81,7 @@ export class WorkerService {
         const nfc = new NFC();
 
         nfc.on('reader', reader => {
+            
             reader.autoProcessing = false;
 
             reader.on('card', async card => {
@@ -95,7 +96,13 @@ export class WorkerService {
 
                         const cardNumber = Buffer.from(data.slice(0, 14), 'hex').toString('utf8');
 
-                        this.socketService.emit('card-scanned', cardNumber)
+                        let matches = cardNumber.match(/(\d+)/);
+     
+                        if (matches) {
+                            this.socketService.emit('card-scanned', matches[0])
+                        }
+
+                        
 
                         //SECTOR 3: 000000000000ff078069ffffffffffff
                         //SECTOR 4: 5a38374150504b3550394c4400000000
