@@ -1,5 +1,10 @@
 {
-    "device": {
-        "nfc": true
-    }
+  "device": {
+    "nfc": true
+  },
+  "device.scanner": {
+    "name": "Scanner",
+    "port": "/dev/ttyACM0",
+    "boundRate": 9600
+  }
 }
