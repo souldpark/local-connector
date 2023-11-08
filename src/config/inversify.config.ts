@@ -9,6 +9,7 @@ import { ConfigService } from '../services/config.service';
 import { SocketService } from '../services/socket.service';
 import { InstallService } from '../services/install.service';
 import { WorkerService } from '../services/worker.service';
+import { CashierService } from '../services/cashier.service';
 
 const container = new Container();
 
@@ -37,6 +38,13 @@ container
   .bind<DeviceService>(DeviceService.name)
   .to(DeviceService)
   .inSingletonScope();
+
+container
+  .bind<CashierService>(CashierService.name)
+  .to(CashierService)
+  .inSingletonScope();
+
+
 
 container
   .bind<WorkerService>(WorkerService.name)

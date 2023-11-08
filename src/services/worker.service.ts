@@ -72,7 +72,6 @@ export class WorkerService {
         const nfc = new NFC();
 
         nfc.on('reader', reader => {
-
             reader.autoProcessing = false;
 
             reader.on('card', async card => {
