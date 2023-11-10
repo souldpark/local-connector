@@ -1,4 +1,7 @@
 {
+  "info": {
+    "pos": "POS1"
+  },
   "device": {
     "nfc": true
   },
