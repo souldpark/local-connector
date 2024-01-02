@@ -28,6 +28,7 @@ export class WorkerService {
                 let matches = data.toString("utf8").match(/(\d+)/);
 
                 if (matches) {
+                    console.log("Card readed", matches[0]);
                     this.socketService.emit('card-scanned', matches[0])
                 }
             })
@@ -75,6 +76,7 @@ export class WorkerService {
             reader.autoProcessing = false;
 
             reader.on('card', async card => {
+
                 if (card.type === TAG_ISO_14443_3) {
                     const key = 'FFFFFFFFFFFF';
                     const keyType = KEY_TYPE_A;
@@ -89,6 +91,7 @@ export class WorkerService {
                         let matches = cardNumber.match(/(\d+)/);
 
                         if (matches) {
+                            console.log("Card readed", matches[0].substring(0, 7));
                             this.socketService.emit('card-scanned', matches[0].substring(0, 7))
                         }
 

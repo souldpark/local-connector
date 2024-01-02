@@ -9,7 +9,7 @@ import path from 'path';
 
 @injectable()
 export class PrinterService {
-  constructor() {}
+  constructor() { }
 
   public async getPrinters(): Promise<Printer[]> {
     return getPrinters();
@@ -23,20 +23,23 @@ export class PrinterService {
 
       let tempFile = path.join(os.tmpdir(), filename);
 
-      let options = { format: 'A4' };
+      let options = {
+        width: 220,
+      };
 
       let file = { content: document };
       html_to_pdf
         .generatePdf(file, options)
         .then((pdfBuffer) => {
           fs.writeFileSync(tempFile, pdfBuffer);
+          console.log(tempFile)
           print(tempFile, { printer: printer })
             .then((data: any) => {
               resolve(data);
             })
             .catch(console.log)
             .finally(() => {
-              fs.unlinkSync(tempFile);
+              // fs.unlinkSync(tempFile);
             });
         })
         .catch((err: any) => {

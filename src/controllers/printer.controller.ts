@@ -13,13 +13,15 @@ import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
 import { PrinterService } from '../services/printer.service';
+import fs from "fs";
+import { render } from "mustache";
 
 @controller('/printer')
 export class PrinterController implements interfaces.Controller {
   constructor(
     @inject(PrinterService.name)
     private printService: PrinterService
-  ) {}
+  ) { }
 
   @httpGet('/list')
   public async list(
@@ -41,13 +43,11 @@ export class PrinterController implements interfaces.Controller {
     @next() next: NextFunction,
     @requestParam('printer') printer: string
   ): Promise<void> {
-    const htmlContent = `
-                        <html>
-                        <body>
-                            <h1>Hello, world!</h1>
-                        </body>
-                        </html>
-                        `;
+
+    let tmpContent = fs.readFileSync(`${__dirname}/../templates/ticket.mustache`, 'utf8');
+
+    var htmlContent = render(tmpContent, request.body);
+
     return this.printService
       .printTicket(htmlContent, printer)
       .then((data: any) => {

@@ -7,7 +7,7 @@
   },
   "device.scanner": {
     "name": "Scanner",
-    "port": "/dev/ttyACM0",
+    "port": "COM3",
     "boundRate": 9600
   }
 }
