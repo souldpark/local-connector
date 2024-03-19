@@ -12,19 +12,31 @@ export class DeviceService {
   ) {
   }
 
-  public async getDevices(): Promise<PortInfo[]> {
-    // this.configService.set("asd", "ddd")
+  public async getDevice(type:string): Promise<any> {
+    return this.configService.get(`device.${type}`);
+
     // let devices = await webusb.requestDevice({ filters: [{}] })
 
-    // console.log(devices)
-    console.log(this.configService.get("device.*"))
+    // // console.log(devices)
+    // let devices = await SerialPort.list();
+    // return devices.map((device: any) => {
+    //   return { name: device.friendlyName, port: device.path }
+    // })
+    
+    // return this.configService.get("device.");
+  }
 
-    return SerialPort.list();
+  public async getSystemDevices(): Promise<any> {
+    let devices = await SerialPort.list();
+    console.log(devices)
+    return devices.map((device: any) => {
+      return { name: device.friendlyName, port: device.path }
+    })
   }
 
   public async setScanner(type: string, scanner: any): Promise<PortInfo[]> {
-    this.configService.set(`device.${type}`, scanner)
-
+    this.configService.set(`device.${type}.${scanner.name}`, scanner)
+    
     return SerialPort.list();
   }
 }

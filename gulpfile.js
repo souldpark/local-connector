@@ -7,11 +7,6 @@ gulp.task('clean', function (cb) {
         .pipe(rimraf({ force: true }));
 });
 
-gulp.task('copy-files', function () {
-    return gulp.src('./install/*.*')
-        .pipe(gulp.dest('./bin/lib'));
-});
-
 gulp.task('copy-package-lock-json', function () {
     return gulp.src('./package-lock.json')
         .pipe(gulp.dest('./dist'));
@@ -47,7 +42,6 @@ gulp.task(
         "copy-package-lock-json",
         "install-dependencies",
         "build-local-connector",
-        "package-local-connector",
-        "copy-files"
+        // "package-local-connector"
     )
 );

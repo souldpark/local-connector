@@ -7,8 +7,8 @@ import { DeviceService } from '../services/device.service';
 import { DeviceController } from '../controllers/devices.controller';
 import { ConfigService } from '../services/config.service';
 import { SocketService } from '../services/socket.service';
-import { InstallService } from '../services/install.service';
 import { WorkerService } from '../services/worker.service';
+import { ConfigurationController } from '../controllers/configuration.controller';
 
 const container = new Container();
 
@@ -16,12 +16,6 @@ container
   .bind<ConfigService>(ConfigService.name)
   .to(ConfigService)
   .inSingletonScope();
-
-container
-  .bind<InstallService>(InstallService.name)
-  .to(InstallService)
-  .inSingletonScope();
-
 
 container
   .bind<SocketService>(SocketService.name)
@@ -50,6 +44,10 @@ container
 container
   .bind<interfaces.Controller>(PrinterController.name)
   .to(PrinterController);
+
+container
+  .bind<interfaces.Controller>(ConfigurationController.name)
+  .to(ConfigurationController);
 
 container
   .bind<interfaces.Controller>(HealthController.name)

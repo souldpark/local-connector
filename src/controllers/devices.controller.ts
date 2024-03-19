@@ -28,7 +28,19 @@ export class DeviceController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction
   ): Promise<void> {
-    let devices = await this.deviceService.getDevices();
+    let devices = await this.deviceService.getSystemDevices();
+
+    response.status(status.OK).send(devices);
+  }
+
+  @httpGet('/list/:type')
+  public async listType(
+    @request() request: Request,
+    @response() response: Response,
+    @next() next: NextFunction,
+    @requestParam('type') type: string
+  ): Promise<void> {
+    let devices = await this.deviceService.getDevice(type);
 
     response.status(status.OK).send(devices);
   }

@@ -36,6 +36,17 @@ export class PrinterController implements interfaces.Controller {
     response.status(status.OK).send(printers);
   }
 
+  @httpPost('/')
+  public async setPrinter(
+    @request() request: Request,
+    @response() response: Response,
+    @next() next: NextFunction
+  ): Promise<void> {
+    await this.printService.setPrinter(request.body.type, request.body.name);
+
+    response.status(status.NO_CONTENT).send();
+  }
+
   @httpPost('/:printer/print')
   public async print(
     @request() request: Request,
@@ -44,7 +55,14 @@ export class PrinterController implements interfaces.Controller {
     @requestParam('printer') printer: string
   ): Promise<void> {
 
-    let tmpContent = fs.readFileSync(`${__dirname}/../templates/ticket.mustache`, 'utf8');
+    let startPath = process.env.INIT_CWD;
+
+    if (!startPath) {
+      startPath = __dirname;
+    }
+
+
+    let tmpContent = fs.readFileSync(`${startPath}/src/templates/ticket.mustache`, 'utf8');
 
     var htmlContent = render(tmpContent, request.body);
 

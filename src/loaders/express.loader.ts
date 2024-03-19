@@ -6,7 +6,6 @@ import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
 import { SocketService } from '../services/socket.service';
-import { InstallService } from '../services/install.service';
 
 export default async (port: string | undefined) => {
   const START_MSG = `⚡️[server]: Server is running at `;
@@ -26,10 +25,10 @@ export default async (port: string | undefined) => {
 
   const app = server.build();
 
-  let installService = container.get<InstallService>(InstallService.name);
-  const credentials = await installService.install()
+  let cert = fs.readFileSync(`local-connector.pem`, { encoding: 'binary' });
+  let key = fs.readFileSync(`local-connector-key.pem`, { encoding: 'binary' });
 
-  const httpsServer = https.createServer(credentials, app);
+  const httpsServer = https.createServer({ key: key, cert: cert }, app);
 
   let socketService = container.get<SocketService>(SocketService.name);
 

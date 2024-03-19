@@ -18,20 +18,31 @@ export class WorkerService {
     }
 
     public async initializeScanner() {
-        let scanner = this.configService.get("device.scanner")
+        let scanners = this.configService.get("device.scanner")
 
         if (this.scannerPort?.isOpen) {
             this.scannerPort.close()
         }
-        if (scanner) {
-            this.scannerPort = this.initializePort(scanner.port, scanner.boundRate, (data: any) => {
-                let matches = data.toString("utf8").match(/(\d+)/);
 
-                if (matches) {
-                    console.log("Card readed", matches[0]);
-                    this.socketService.emit('card-scanned', matches[0])
-                }
+        if (scanners) {
+            scanners.forEach((scanner: any) => {
+                this.initializePort(scanner.port, scanner.boundRate, (data: any) => {
+                    let matches = data.toString("utf8").match(/(\d+)/);
+
+                    if (matches) {
+                        console.log("Card readed", matches[0]);
+                        this.socketService.emit('card-scanned', matches[0])
+                    }
+                })
             })
+            // this.scannerPort = this.initializePort(scanner.port, scanner.boundRate, (data: any) => {
+            //     let matches = data.toString("utf8").match(/(\d+)/);
+
+            //     if (matches) {
+            //         console.log("Card readed", matches[0]);
+            //         this.socketService.emit('card-scanned', matches[0])
+            //     }
+            // })
         }
     }
 

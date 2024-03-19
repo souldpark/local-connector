@@ -1,13 +1,17 @@
 {
-  "info": {
-    "pos": "POS1"
-  },
-  "device": {
+  "device.nfc": {
     "nfc": true
   },
-  "device.scanner": {
-    "name": "Scanner",
+  "device.scanner.Barcode Scanner (COM3)": {
+    "name": "Barcode Scanner (COM3)",
     "port": "COM3",
     "boundRate": 9600
-  }
+  },
+  "device.scanner.Barcode Scanner (COM4)": {
+    "name": "Barcode Scanner (COM4)",
+    "port": "COM4",
+    "boundRate": 9600
+  },
+  "printer.ticket": "Microsoft Print to PDF",
+  "info.pos": "65a8f86883de77611a737b30"
 }

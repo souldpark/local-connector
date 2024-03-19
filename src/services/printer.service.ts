@@ -1,5 +1,5 @@
-import { injectable } from 'inversify';
-import axios from 'axios';
+import { inject, injectable } from 'inversify';
+import { ConfigService } from './config.service';
 import crypto from 'crypto';
 import { print, getPrinters, Printer, getDefaultPrinter } from 'pdf-to-printer';
 import fs from 'fs';
@@ -9,10 +9,15 @@ import path from 'path';
 
 @injectable()
 export class PrinterService {
-  constructor() { }
+  constructor(@inject(ConfigService.name)
+  private configService: ConfigService) { }
 
   public async getPrinters(): Promise<Printer[]> {
     return getPrinters();
+  }
+
+  public async setPrinter(type: string, name: string): Promise<any> {
+    this.configService.set(`printer.${type}`, name)
   }
 
   public async printTicket(document: string, printer: string) {

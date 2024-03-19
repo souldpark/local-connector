@@ -14,7 +14,7 @@ export class SocketService {
     }
 
     public async init(httpsServer: any) {
-        let posInfo = this.configService.get("info")
+        let posInfo = { pos: this.configService.get("info.pos") }
 
         this.socketInstance = new Server(httpsServer, {
             cors: {
@@ -33,7 +33,7 @@ export class SocketService {
         });
     }
 
-    public emit(ev: string, obj:any) {
+    public emit(ev: string, obj: any) {
         this.socketInstance.emit(ev, obj)
     }
 
