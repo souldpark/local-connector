@@ -4,9 +4,9 @@
   "description": "Local Connector Service",
   "main": "gulpfile.js",
   "scripts": {
-    "postinstall": "winser -i -s -c -a",
-    "uninstall": "winser -r -x -s",
-    "prestart": "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
+    "_postinstall": "winser -i -s -c -a",
+    "_uninstall": "winser -r -x -s",
+    "_prestart": "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
     "start": "node main.js",
     "debug": "nodemon ./src/main.ts",
     "build": "tsc --build"
