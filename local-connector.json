@@ -6,7 +6,7 @@
     "extract_dir": "local-connector",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/archive/1.0.0/local-connector.zip",
+            "url": "file:///%USERPROFILE%/scoop/buckets/local-connector/bin/1.0.0.zip",
             "hash": "5AC37A38EF6F52A0A86E4AD9B0F45749AC1329BBA981B8EF27484002D0AB0CF2"
         }
     },
