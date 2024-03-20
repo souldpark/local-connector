@@ -12,9 +12,9 @@
     "depends": ["nodejs", "mkcert"],
     "post_install": [
         "cd $dir",
-        "npm install",
+        "npm install --omit=dev",
         "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
-        "npx winser -i -s -c -a"
+        "npx winser -i -s -a"
     ],
     "pre_uninstall": [
         "npx winser -r -x -s"
