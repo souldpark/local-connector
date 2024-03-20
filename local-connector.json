@@ -9,7 +9,7 @@
             "hash": "5AC37A38EF6F52A0A86E4AD9B0F45749AC1329BBA981B8EF27484002D0AB0CF2"
         }
     },
-    "pre_install": "scoop install nodejs",
+    "depends": ["nodejs", "mkcert"],
     "post_install": [
         "cd $dir",
         "npm install",
