@@ -6,7 +6,7 @@
     "architecture": {
         "64bit": {
             "url": "https://github.com/souldpark/local-connector/releases/download/1.0.1/local-connector.zip",
-            "hash": "5AC37A38EF6F52A0A86E4AD9B0F45749AC1329BBA981B8EF27484002D0AB0CF2"
+            "hash": "0e7f70280a3febc811d6c9c23b66e12d59db029b90cf66dcc68992c6e6b4ae1c"
         }
     },
     "depends": [
