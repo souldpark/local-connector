@@ -13,8 +13,6 @@ import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
 import { PrinterService } from '../services/printer.service';
-import fs from "fs";
-import { render } from "mustache";
 
 @controller('/printer')
 export class PrinterController implements interfaces.Controller {
