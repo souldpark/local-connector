@@ -9,6 +9,7 @@ import { ConfigService } from '../services/config.service';
 import { SocketService } from '../services/socket.service';
 import { WorkerService } from '../services/worker.service';
 import { ConfigurationController } from '../controllers/configuration.controller';
+import { LogService } from '../services/log.service';
 
 const container = new Container();
 
@@ -36,6 +37,12 @@ container
   .bind<WorkerService>(WorkerService.name)
   .to(WorkerService)
   .inSingletonScope();
+
+container
+  .bind<LogService>(LogService.name)
+  .to(LogService)
+  .inSingletonScope();
+
 
 container
   .bind<interfaces.Controller>(DeviceController.name)

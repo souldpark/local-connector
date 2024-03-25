@@ -14,12 +14,15 @@ import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
 import { DeviceService } from '../services/device.service';
 import { ConfigService } from '../services/config.service';
+import { LogService } from '../services/log.service';
 
 @controller('/device')
 export class DeviceController implements interfaces.Controller {
   constructor(
     @inject(DeviceService.name)
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    @inject(LogService.name)
+    private logService: LogService
   ) { }
 
   @httpGet('/list')
@@ -28,9 +31,14 @@ export class DeviceController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction
   ): Promise<void> {
-    let devices = await this.deviceService.getSystemDevices();
+    try {
+      let devices = await this.deviceService.getSystemDevices();
 
-    response.status(status.OK).send(devices);
+      response.status(status.OK).send(devices);
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
   }
 
   @httpGet('/list/:type')
@@ -40,9 +48,14 @@ export class DeviceController implements interfaces.Controller {
     @next() next: NextFunction,
     @requestParam('type') type: string
   ): Promise<void> {
-    let devices = await this.deviceService.getDevice(type);
+    try {
+      let devices = await this.deviceService.getDevice(type);
 
-    response.status(status.OK).send(devices);
+      response.status(status.OK).send(devices);
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
   }
 
   @httpPost('/:type')
@@ -57,6 +70,7 @@ export class DeviceController implements interfaces.Controller {
 
       response.status(status.NO_CONTENT).send();
     } catch (error: any) {
+      this.logService.error(error)
       response.status(status.INTERNAL_SERVER_ERROR).send(error);
     }
   }

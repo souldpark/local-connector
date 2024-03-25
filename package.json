@@ -1,6 +1,7 @@
 {
   "name": "local-connector",
-  "version": "1.0.0",
+  "friendlyName": "Local Connector",
+  "version": "1.0.5",
   "description": "Local Connector Service",
   "main": "main.js",
   "scripts": {
@@ -30,11 +31,17 @@
   },
   "devDependencies": {
     "@types/gulp": "^4.0.13",
+    "@types/gulp-json-editor": "^2.2.36",
     "@types/gulp-run": "^1.7.0",
+    "@types/gulp-zip": "^4.0.4",
     "@types/nconf": "^0.10.6",
     "gulp": "^4.0.2",
+    "gulp-github-release": "^1.2.1",
+    "gulp-json-editor": "^2.6.0",
     "gulp-rimraf": "^1.0.0",
     "gulp-run": "^1.7.1",
+    "gulp-update-version": "^1.0.2",
+    "gulp-zip": "^6.0.0",
     "ts-node": "^10.9.1"
   }
 }

@@ -1,27 +1,15 @@
 {
-    "version": "1.0.3",
-    "homepage": "https://example.com/myapp",
+    "version": "1.0.5",
+    "homepage": "https://addlayer.io",
     "description": "Local connector for SouldPark",
     "license": "License information",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.3/local-connector.zip",
-            "hash": "a7983497b3d833f5f2bfcef91fa971904a0b197505441c6bccba07f18ddf22a3"
+            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.5/local-connector.zip",
+            "hash": "cbda2e198598aaeb0473ab76c8d42846c480aafee6facb6e0f8884fccac7b188"
         }
     },
-    "depends": [
-        "python",
-        "nodejs",
-        "mkcert",
-        "nssm"
-    ],
-    "post_install": [
-        "cd $dir",
-        "npm install --omit=dev",
-        "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
-        "nssm install local-connector node main.js SERVICE_AUTO_START"
-    ],
-    "pre_uninstall": [
-        "nssm remove local-connector confirm"
-    ]
+    "depends": ["python", "nodejs", "mkcert"],
+    "post_install": ["cd $dir", "npm install --omit=dev", "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost", "node winservice.js install"],
+    "pre_uninstall": ["node winservice.js uninstall"]
 }

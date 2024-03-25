@@ -6,6 +6,7 @@ import cors from 'cors';
 import fs from 'fs';
 import os from 'os';
 import { SocketService } from '../services/socket.service';
+import { LogService } from '../services/log.service';
 
 export default async (port: string | undefined) => {
   const START_MSG = `⚡️[server]: Server is running at `;
@@ -32,10 +33,12 @@ export default async (port: string | undefined) => {
   const httpsServer = https.createServer({ key: key, cert: cert }, app);
 
   let socketService = container.get<SocketService>(SocketService.name);
+  let logService = container.get<LogService>(LogService.name);
 
   socketService.init(httpsServer)
 
   httpsServer.listen(PORT, () => {
     console.log(START_MSG + PORT);
+    logService.info(START_MSG + PORT)
   });
 };

@@ -15,6 +15,7 @@ import status from 'http-status';
 import { DeviceService } from '../services/device.service';
 import { ConfigService } from '../services/config.service';
 import { SocketService } from '../services/socket.service';
+import { LogService } from '../services/log.service';
 
 @controller('/config')
 export class ConfigurationController implements interfaces.Controller {
@@ -22,7 +23,9 @@ export class ConfigurationController implements interfaces.Controller {
     @inject(ConfigService.name)
     private configService: ConfigService,
     @inject(SocketService.name)
-    private socketService: SocketService
+    private socketService: SocketService,
+    @inject(LogService.name)
+    private logService: LogService
   ) { }
 
   @httpPost('/pos')
@@ -38,6 +41,7 @@ export class ConfigurationController implements interfaces.Controller {
 
       response.status(status.NO_CONTENT).send();
     } catch (error: any) {
+      this.logService.error(error)
       response.status(status.INTERNAL_SERVER_ERROR).send(error);
     }
   }

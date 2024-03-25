@@ -2,6 +2,7 @@
 
 # compiled output
 bin
+distribution
 dist
 tmp
 /out-tsc

@@ -13,12 +13,15 @@ import { inject } from 'inversify';
 import { NextFunction, Request, Response } from 'express';
 import status from 'http-status';
 import { PrinterService } from '../services/printer.service';
+import { LogService } from '../services/log.service';
 
 @controller('/printer')
 export class PrinterController implements interfaces.Controller {
   constructor(
     @inject(PrinterService.name)
-    private printService: PrinterService
+    private printService: PrinterService,
+    @inject(LogService.name)
+    private logService: LogService
   ) {
   }
 
@@ -30,9 +33,14 @@ export class PrinterController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction
   ): Promise<void> {
-    let printers = await this.printService.getPrinters();
+    try {
+      let printers = await this.printService.getPrinters();
 
-    response.status(status.OK).send(printers);
+      response.status(status.OK).send(printers);
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
   }
 
   @httpPost('/')
@@ -41,9 +49,14 @@ export class PrinterController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction
   ): Promise<void> {
-    await this.printService.setPrinter(request.body.type, request.body.name);
+    try {
+      await this.printService.setPrinter(request.body.type, request.body.name);
 
-    response.status(status.NO_CONTENT).send();
+      response.status(status.NO_CONTENT).send();
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
   }
 
   @httpPost('/preview')
@@ -52,10 +65,15 @@ export class PrinterController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction
   ): Promise<void> {
-    let pdf = await this.printService
-      .generateTicket(Buffer.from(request.body.document, 'base64').toString('utf8'))
+    try {
+      let pdf = await this.printService
+        .generateTicket(Buffer.from(request.body.document, 'base64').toString('utf8'))
 
-    response.status(status.OK).send({ filename: pdf });
+      response.status(status.OK).send({ filename: pdf });
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
   }
 
   @httpPost('/print')
@@ -64,12 +82,13 @@ export class PrinterController implements interfaces.Controller {
     @response() response: Response,
     @next() next: NextFunction,
   ): Promise<void> {
-    return this.printService
-      .printTicket(request.body.document)
-      .then((data: any) => {
-        response.status(status.OK).send(data);
-      }).catch((error: any) => {
-        response.status(status.INTERNAL_SERVER_ERROR).send({ "message": error });
-      });
+    try {
+      let data = await this.printService
+        .printTicket(request.body.document)
+      response.status(status.OK).send(data);
+    } catch (error) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send({ "message": error });
+    }
   }
 }
