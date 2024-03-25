@@ -58,30 +58,25 @@ gulp.task('zip', function () {
         .pipe(gulp.dest('./distribution'));
 });
 
-gulp.task('bump', function (done) {
-    gulp.src("./package.json")
-        .pipe(bump())
-        .pipe(gulp.dest('./'))
-        .on('end', function () {
-            var pkg = getPackageJson();
+gulp.task('update-scoop-definition', function (done) {
+    var pkg = getPackageJson();
 
-            const buff = fs.readFileSync("./distribution/local-connector.zip");
+    const buff = fs.readFileSync("./distribution/local-connector.zip");
 
-            const hash = createHash("sha256").update(buff).digest("hex");
+    const hash = createHash("sha256").update(buff).digest("hex");
 
-            gulp.src("./local-connector.json")
-                .pipe(jeditor({
-                    'version': pkg.version,
-                    "architecture": {
-                        "64bit": {
-                            "url": `https://github.com/souldpark/local-connector/releases/download/${pkg.version}/local-connector.zip`,
-                            "hash": hash
-                        }
-                    }
-                }))
-                .pipe(gulp.dest("./"))
-                .on('end', done);
-        });
+    gulp.src("./local-connector.json")
+        .pipe(jeditor({
+            'version': pkg.version,
+            "architecture": {
+                "64bit": {
+                    "url": `https://github.com/souldpark/local-connector/releases/download/${pkg.version}/local-connector.zip`,
+                    "hash": hash
+                }
+            }
+        }))
+        .pipe(gulp.dest("./"))
+        .on('end', done);
 });
 
 gulp.task('release', function (done) {
@@ -124,6 +119,7 @@ gulp.task(
         "build-local-connector",
         "copy-service-installer",
         "zip",
+        "update-scoop-definition",
         "release",
         "push"
     )
