@@ -1,0 +1,36 @@
+apiVersion: networking.istio.io/v1beta1
+kind: ServiceEntry
+metadata:
+  name: mailgun
+  namespace: prod
+spec:
+  exportTo:
+    - .
+  hosts:
+    - smtp.mailgun.org
+  location: MESH_EXTERNAL
+  ports:
+    - name: ssltls
+      number: 587
+      protocol: TLS
+  resolution: DNS
+---
+
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+    name: mailgun
+spec:
+    hosts:
+    - "smtp.mailgun.org"
+    tls:
+    - match:
+      - port: 587
+        sniHosts:
+        - "smtp.mailgun.org"
+      route:
+      - destination:
+          host: "smtp.mailgun.org"
+          port:
+            number: 587
+        weight: 100

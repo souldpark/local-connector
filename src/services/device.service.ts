@@ -28,7 +28,6 @@ export class DeviceService {
 
   public async getSystemDevices(): Promise<any> {
     let devices = await SerialPort.list();
-    console.log(devices)
     return devices.map((device: any) => {
       return { name: device.friendlyName, port: device.path }
     })

@@ -21,7 +21,8 @@ export class PrinterController implements interfaces.Controller {
   constructor(
     @inject(PrinterService.name)
     private printService: PrinterService
-  ) { }
+  ) { 
+  }
 
   @httpGet('/list')
   public async list(
@@ -32,7 +33,7 @@ export class PrinterController implements interfaces.Controller {
     @next() next: NextFunction
   ): Promise<void> {
     let printers = await this.printService.getPrinters();
-
+console.log("asdasd",printers)
     response.status(status.OK).send(printers);
   }
 
@@ -47,27 +48,26 @@ export class PrinterController implements interfaces.Controller {
     response.status(status.NO_CONTENT).send();
   }
 
-  @httpPost('/:printer/print')
+  @httpPost('/preview')
+  public async preview(
+    @request() request: Request,
+    @response() response: Response,
+    @next() next: NextFunction
+  ): Promise<void> {
+    let pdf = await this.printService
+      .generateTicket(Buffer.from(request.body.document, 'base64').toString('utf8'))
+
+    response.status(status.OK).send({ filename: pdf });
+  }
+
+  @httpPost('/print')
   public async print(
     @request() request: Request,
     @response() response: Response,
     @next() next: NextFunction,
-    @requestParam('printer') printer: string
   ): Promise<void> {
-
-    let startPath = process.env.INIT_CWD;
-
-    if (!startPath) {
-      startPath = __dirname;
-    }
-
-
-    let tmpContent = fs.readFileSync(`${startPath}/src/templates/ticket.mustache`, 'utf8');
-
-    var htmlContent = render(tmpContent, request.body);
-
     return this.printService
-      .printTicket(htmlContent, printer)
+      .printTicket(request.body.document)
       .then((data: any) => {
         response.status(status.OK).send(data);
       });

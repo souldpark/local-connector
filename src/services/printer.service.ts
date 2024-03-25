@@ -9,8 +9,13 @@ import path from 'path';
 
 @injectable()
 export class PrinterService {
+  private defaultPrinter = "";
   constructor(@inject(ConfigService.name)
-  private configService: ConfigService) { }
+  private configService: ConfigService) {
+    getDefaultPrinter().then((def: any) => {
+      this.defaultPrinter = def.deviceId;
+    })
+  }
 
   public async getPrinters(): Promise<Printer[]> {
     return getPrinters();
@@ -20,36 +25,38 @@ export class PrinterService {
     this.configService.set(`printer.${type}`, name)
   }
 
-  public async printTicket(document: string, printer: string) {
+  public async generateTicket(document: string) {
+    var options = { width: 220, preferCSSPageSize: true, header: { "height": "5mm" }, footer: { "height": "5mm" }, border: { top: '30px', bottom: '30px', left: '10px' } }
+
+
+    let file = { content: document };
+
+    const md5Hash = crypto.createHash('md5');
+    md5Hash.update(document);
+    let filename = md5Hash.digest('hex') + ".pdf";
+
+    let tempFile = path.join(os.tmpdir(), filename);
+
+    let pdfBuffer = await html_to_pdf.generatePdf(file, options)
+
+    fs.writeFileSync(tempFile, pdfBuffer);
+
+    return filename
+  }
+
+  public async printTicket(filename: string) {
+    let tempFile = path.join(os.tmpdir(), filename);
+
     return new Promise((resolve: any, reject: any) => {
-      const md5Hash = crypto.createHash('md5');
-      md5Hash.update(document);
-      let filename = md5Hash.digest('hex');
 
-      let tempFile = path.join(os.tmpdir(), filename);
-
-      let options = {
-        width: 220,
-      };
-
-      let file = { content: document };
-      html_to_pdf
-        .generatePdf(file, options)
-        .then((pdfBuffer) => {
-          fs.writeFileSync(tempFile, pdfBuffer);
-          console.log(tempFile)
-          print(tempFile, { printer: printer })
-            .then((data: any) => {
-              resolve(data);
-            })
-            .catch(console.log)
-            .finally(() => {
-              // fs.unlinkSync(tempFile);
-            });
+      print(tempFile, { printer: this.defaultPrinter })
+        .then((data: any) => {
+          resolve(data);
         })
-        .catch((err: any) => {
-          reject(err);
+        .catch(console.log)
+        .finally(() => {
+          // fs.unlinkSync(tempFile);
         });
-    });
+    })
   }
 }

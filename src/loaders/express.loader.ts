@@ -4,7 +4,7 @@ import { container } from '../config/inversify.config';
 const https = require('https');
 import cors from 'cors';
 import fs from 'fs';
-import path from 'path';
+import os from 'os';
 import { SocketService } from '../services/socket.service';
 
 export default async (port: string | undefined) => {
@@ -21,6 +21,7 @@ export default async (port: string | undefined) => {
 
     app.use(cors());
     app.use(express.json());
+    app.use("/temp", express.static(os.tmpdir()))
   });
 
   const app = server.build();
