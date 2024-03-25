@@ -45,11 +45,13 @@ export class PrinterService {
   }
 
   public async printTicket(filename: string) {
+    let printer = this.configService.get("device.printer")
+
     let tempFile = path.join(os.tmpdir(), filename);
 
     return new Promise((resolve: any, reject: any) => {
 
-      print(tempFile, { printer: this.defaultPrinter })
+      print(tempFile, { printer: printer })
         .then((data: any) => {
           resolve(data);
         })

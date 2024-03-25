@@ -5,8 +5,8 @@
     "license": "License information",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.1/local-connector.zip",
-            "hash": "0e7f70280a3febc811d6c9c23b66e12d59db029b90cf66dcc68992c6e6b4ae1c"
+            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.2/local-connector.zip",
+            "hash": "1ce05fdb37a0504fa83004b7996081727cc3f6e7c77f2d88794a0475d75712c0"
         }
     },
     "depends": [

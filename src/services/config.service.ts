@@ -1,11 +1,21 @@
 import { injectable } from 'inversify';
 import path from "path"
 import nconf from 'nconf';
+import os from "os";
+import fs from "fs";;
 
 @injectable()
 export class ConfigService {
   constructor() {
-    const configFilePath = path.join(process.cwd(), 'default.json');
+    let configFilePath = path.join(os.homedir(), ".local-connector");
+    if (!fs.existsSync(configFilePath)) {
+      fs.mkdirSync(configFilePath, { recursive: true });
+      console.log(`Folder created at ${configFilePath}`);
+    } else {
+      console.log(`Folder already exists at ${configFilePath}`);
+    }
+
+    configFilePath = path.join(configFilePath, 'default.json');
 
     nconf.file({ file: configFilePath });
 

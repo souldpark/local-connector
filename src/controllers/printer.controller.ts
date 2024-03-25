@@ -19,7 +19,7 @@ export class PrinterController implements interfaces.Controller {
   constructor(
     @inject(PrinterService.name)
     private printService: PrinterService
-  ) { 
+  ) {
   }
 
   @httpGet('/list')
@@ -31,7 +31,7 @@ export class PrinterController implements interfaces.Controller {
     @next() next: NextFunction
   ): Promise<void> {
     let printers = await this.printService.getPrinters();
-console.log("asdasd",printers)
+
     response.status(status.OK).send(printers);
   }
 
