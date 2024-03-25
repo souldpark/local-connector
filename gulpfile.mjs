@@ -4,6 +4,7 @@ import rimraf from 'gulp-rimraf';
 import zip from 'gulp-zip';
 import jeditor from "gulp-json-editor";
 import bump from 'gulp-update-version';
+import git from 'gulp-git';
 import fs from "fs";
 import { createHash } from "crypto";
 import * as dotenv from 'dotenv';
@@ -88,6 +89,7 @@ gulp.task('release', function (done) {
 
     gulp.src('./distribution/local-connector.zip')
         .pipe(release({
+            token: process.env.GITHUB_TOKEN,
             owner: 'souldpark',                    // if missing, it will be extracted from manifest (the repository.url field)
             repo: 'local-connector',            // if missing, it will be extracted from manifest (the repository.url field)
             tag: pkg.version,                      // if missing, the version will be extracted from manifest and prepended by a 'v'
@@ -97,6 +99,19 @@ gulp.task('release', function (done) {
             prerelease: false                  // if missing it's false
         }))
         .on('end', done);
+});
+
+gulp.task('push', function (done) {
+    return gulp.src('./*')
+        .pipe(git.commit('New Release'))
+        .on('end', function () {
+            git.push('origin', 'main', function (err) {
+                if (err) {
+                    throw err;
+                }
+                done(); // Signal async completion
+            });
+        });
 });
 
 gulp.task(
@@ -109,6 +124,7 @@ gulp.task(
         "build-local-connector",
         "copy-service-installer",
         "zip",
-        "release"
+        "release",
+        "push"
     )
 );
