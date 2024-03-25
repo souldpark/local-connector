@@ -2,11 +2,13 @@ import gulp from "gulp";
 import run from "gulp-run";
 import rimraf from 'gulp-rimraf';
 import zip from 'gulp-zip';
-import release from 'gulp-github-release';
 import jeditor from "gulp-json-editor";
 import bump from 'gulp-update-version';
 import fs from "fs";
 import { createHash } from "crypto";
+import * as dotenv from 'dotenv';
+dotenv.config({ path: `.env` });
+import release from 'gulp-github-release';
 
 var getPackageJson = function () {
     return JSON.parse(fs.readFileSync('./package.json', 'utf8'));
@@ -86,7 +88,6 @@ gulp.task('release', function (done) {
 
     gulp.src('./distribution/local-connector.zip')
         .pipe(release({
-            token: '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',                     // or you can set an env var called GITHUB_TOKEN instead
             owner: 'souldpark',                    // if missing, it will be extracted from manifest (the repository.url field)
             repo: 'local-connector',            // if missing, it will be extracted from manifest (the repository.url field)
             tag: pkg.version,                      // if missing, the version will be extracted from manifest and prepended by a 'v'
