@@ -68,6 +68,8 @@ export class PrinterController implements interfaces.Controller {
       .printTicket(request.body.document)
       .then((data: any) => {
         response.status(status.OK).send(data);
+      }).catch((error: any) => {
+        response.status(status.INTERNAL_SERVER_ERROR).send({ "message": error });
       });
   }
 }

@@ -1,26 +1,27 @@
 {
-    "version": "1.0.2",
+    "version": "1.0.3",
     "homepage": "https://example.com/myapp",
     "description": "Local connector for SouldPark",
     "license": "License information",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.2/local-connector.zip",
-            "hash": "1ce05fdb37a0504fa83004b7996081727cc3f6e7c77f2d88794a0475d75712c0"
+            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.3/local-connector.zip",
+            "hash": "a7983497b3d833f5f2bfcef91fa971904a0b197505441c6bccba07f18ddf22a3"
         }
     },
     "depends": [
         "python",
         "nodejs",
-        "mkcert"
+        "mkcert",
+        "nssm"
     ],
     "post_install": [
         "cd $dir",
         "npm install --omit=dev",
         "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
-        "npx winser -i -s -a"
+        "nssm install local-connector node main.js SERVICE_AUTO_START"
     ],
     "pre_uninstall": [
-        "npx winser -r -x -s"
+        "nssm remove local-connector confirm"
     ]
 }

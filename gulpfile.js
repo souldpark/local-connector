@@ -42,6 +42,6 @@ gulp.task(
         "copy-package-lock-json",
         "install-dependencies",
         "build-local-connector",
-        // "package-local-connector"
+        "package-local-connector"
     )
 );

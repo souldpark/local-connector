@@ -50,15 +50,18 @@ export class PrinterService {
     let tempFile = path.join(os.tmpdir(), filename);
 
     return new Promise((resolve: any, reject: any) => {
-
-      print(tempFile, { printer: printer })
-        .then((data: any) => {
-          resolve(data);
-        })
-        .catch(console.log)
-        .finally(() => {
-          // fs.unlinkSync(tempFile);
-        });
+      if (printer.length == 0) {
+        reject("Debe configurar una impresora")
+      } else {
+        print(tempFile, { printer: printer })
+          .then((data: any) => {
+            resolve(data);
+          })
+          .catch(console.log)
+          .finally(() => {
+            // fs.unlinkSync(tempFile);
+          });
+      }
     })
   }
 }
