@@ -1,11 +1,11 @@
 {
-    "version": "1.0.0",
+    "version": "1.0.1",
     "homepage": "https://example.com/myapp",
     "description": "Local connector for SouldPark",
     "license": "License information",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.0/local-connector.zip",
+            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.1/local-connector.zip",
             "hash": "5AC37A38EF6F52A0A86E4AD9B0F45749AC1329BBA981B8EF27484002D0AB0CF2"
         }
     },

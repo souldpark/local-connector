@@ -13,3 +13,5 @@ scoop install git
 scoop bucket add extras
 scoop bucket add local-connector https://github.com/souldpark/local-connector
 scoop install local-connector
+
+scoop install vcredist
