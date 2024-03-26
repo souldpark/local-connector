@@ -9,7 +9,19 @@
             "hash": "87cba5ba9227c7a1122f30ccbfcd0a094ae58ac1708de74993851c03ac503e93"
         }
     },
-    "depends": ["python", "nodejs", "mkcert"],
-    "post_install": ["cd $dir", "npm install --omit=dev", "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost", "node winservice.js install"],
-    "pre_uninstall": ["node winservice.js uninstall"]
+    "depends": [
+        "python",
+        "nodejs",
+        "mkcert"
+    ],
+    "post_install": [
+        "cd $dir",
+        "npm install --omit=dev",
+        "mkcert --install -cert-file local-connector.pem -key-file local-connector-key.pem localhost",
+        "node winservice.js install"
+    ],
+    "pre_uninstall": [
+        "cd $dir",
+        "node winservice.js uninstall"
+    ]
 }
