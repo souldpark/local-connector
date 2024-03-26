@@ -25,11 +25,8 @@ export class ConfigService {
 
   }
 
-  public get(pattern?: string): any {
-    let configs = nconf.get()
-    const deviceKeys = Object.keys(configs).filter(key => key.startsWith(pattern));
-    const devices = deviceKeys.map(key => configs[key]);
-    return (devices.length == 1 ? devices[0] : devices);
+  public get(key: string): any {
+    return nconf.get(key)
   }
 
   public set(key: string, value: any) {

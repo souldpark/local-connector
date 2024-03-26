@@ -16,11 +16,6 @@ scoop install git
 # Add Scoop buckets
 scoop bucket add extras
 
-
-scoop bucket add legion-labs https://github.com/legion-labs/scoop-bucket
-
-scoop install vs_buildtools
-
 # Add local-connector bucket
 scoop bucket add local-connector https://github.com/souldpark/local-connector
 
