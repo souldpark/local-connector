@@ -18,11 +18,6 @@ export class ConfigService {
     configFilePath = path.join(configFilePath, 'default.json');
 
     nconf.file({ file: configFilePath });
-
-    nconf.defaults({
-      nfc: false
-    });
-
   }
 
   public get(key: string): any {

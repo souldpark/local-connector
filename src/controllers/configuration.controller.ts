@@ -28,24 +28,6 @@ export class ConfigurationController implements interfaces.Controller {
     private logService: LogService
   ) { }
 
-  // @httpPost('/pos')
-  // public async setPos(
-  //   @request() request: Request,
-  //   @response() response: Response,
-  //   @next() next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     this.configService.set(`info.pos`, request.body.pos)
-
-  //     this.socketService.emit("local-connect", { pos: request.body.pos })
-
-  //     response.status(status.NO_CONTENT).send();
-  //   } catch (error: any) {
-  //     this.logService.error(error)
-  //     response.status(status.INTERNAL_SERVER_ERROR).send(error);
-  //   }
-  // }
-
   @httpGet('/:type')
   public async get(
     @request() request: Request,
@@ -73,7 +55,7 @@ export class ConfigurationController implements interfaces.Controller {
     try {
       this.configService.set(type, request.body);
 
-      this.socketService.emit(`set-${type}`, { printer: request.body })
+      this.socketService.emit(`set-${type}`, request.body)
 
       response.status(status.NO_CONTENT).send();
     } catch (error: any) {
@@ -81,22 +63,4 @@ export class ConfigurationController implements interfaces.Controller {
       response.status(status.INTERNAL_SERVER_ERROR).send(error);
     }
   }
-
-  // @httpPost('/printer')
-  // public async setPrinter(
-  //   @request() request: Request,
-  //   @response() response: Response,
-  //   @next() next: NextFunction,
-  // ): Promise<void> {
-  //   try {
-  //     this.configService.set("device.printer", request.body.printer);
-
-  //     this.socketService.emit("printer/selected", { printer: request.body.printer })
-
-  //     response.status(status.NO_CONTENT).send();
-  //   } catch (error: any) {
-  //     this.logService.error(error)
-  //     response.status(status.INTERNAL_SERVER_ERROR).send(error);
-  //   }
-  // }
 }
