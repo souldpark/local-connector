@@ -14,7 +14,7 @@ export class SocketService {
     }
 
     public async init(httpsServer: any) {
-        let posInfo = { pos: this.configService.get("info.pos") }
+        let posInfo = { pos: this.configService.get("pos") }
 
         this.socketInstance = new Server(httpsServer, {
             cors: {
@@ -25,7 +25,7 @@ export class SocketService {
         this.socketInstance.on('connection', (socket: Socket) => {
             console.log('A user connected.');
 
-            this.emit("local-connect", posInfo)
+            this.emit("set-pos", posInfo)
 
             socket.on('disconnect', () => {
                 console.log('A user disconnected.');
