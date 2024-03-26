@@ -45,15 +45,15 @@ export class PrinterService {
   }
 
   public async printTicket(filename: string) {
-    let printer = this.configService.get("device.printer")
+    let printer = this.configService.get("printer")
 
     let tempFile = path.join(os.tmpdir(), filename);
 
     return new Promise((resolve: any, reject: any) => {
-      if (printer.length == 0) {
+      if (!printer) {
         reject("Debe configurar una impresora")
       } else {
-        print(tempFile, { printer: printer })
+        print(tempFile, { printer: printer.name })
           .then((data: any) => {
             resolve(data);
           })
