@@ -21,6 +21,7 @@ if (process.argv[2] == "install") {
 }
 
 if (process.argv[2] == "uninstall") {
+    svc.stop();
     svc.on('uninstall', function () {
         console.log('Uninstall complete.');
     });

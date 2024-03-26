@@ -23,7 +23,11 @@ export class SocketService {
         this.socketInstance.on('connection', (socket: Socket) => {
             console.log('A user connected.');
 
-            this.emit("set-pos", this.configService.get("pos"))
+            let pos = this.configService.get("pos")
+
+            if (pos){
+                this.emit("set-pos", pos)
+            }
 
             socket.on('disconnect', () => {
                 console.log('A user disconnected.');
