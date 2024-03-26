@@ -9,11 +9,18 @@ if (!process.env.NODE_ENV) {
   dotenv.config({ path: `${__dirname}/../.env` });
 }
 
+let logService = container.get<LogService>(LogService.name);
+
+process.on('uncaughtException', function (err: Error) {
+  logService.error(`Error message: ${err.message}
+  Error trace: ${err.stack}`);
+});
+
 async function startServer() {
   await require('./loaders').default();
 
   let workerService = container.get<WorkerService>(WorkerService.name);
-  
+
   workerService.initializeScanner()
   workerService.initializeNFC()
 }

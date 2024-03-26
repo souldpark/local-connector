@@ -12,3 +12,4 @@ scoop bucket add local-connector https://github.com/souldpark/local-connector
 scoop install local-connector
 
 Una vez instalado el archivo de configuracion se encuentra en la carpeta C:\Windows\system32\config\systemprofile\.local-connector
+
