@@ -71,65 +71,68 @@ export class WorkerService {
 
     public async initializeNFC() {
         let deviceNfc = this.configService.get("nfc")
+
         if (deviceNfc) {
-            const nfc = new NFC();
+            if (deviceNfc.name == "generic") {
+                const nfc = new NFC();
 
-            nfc.on('reader', reader => {
-                reader.autoProcessing = false;
+                nfc.on('reader', reader => {
+                    reader.autoProcessing = false;
 
-                reader.on('card', async card => {
+                    reader.on('card', async card => {
 
-                    if (card.type === TAG_ISO_14443_3) {
-                        const key = 'FFFFFFFFFFFF';
-                        const keyType = KEY_TYPE_A;
-                        const sector = 5
-                        try {
-                            await reader.authenticate(sector, keyType, key);
+                        if (card.type === TAG_ISO_14443_3) {
+                            const key = 'FFFFFFFFFFFF';
+                            const keyType = KEY_TYPE_A;
+                            const sector = 5
+                            try {
+                                await reader.authenticate(sector, keyType, key);
 
-                            const data = await reader.read(sector, 16, 16);
+                                const data = await reader.read(sector, 16, 16);
 
-                            const cardNumber = Buffer.from(data.slice(0, 14), 'hex').toString('utf8');
+                                const cardNumber = Buffer.from(data.slice(0, 14), 'hex').toString('utf8');
 
-                            let matches = cardNumber.match(/(\d+)/);
+                                let matches = cardNumber.match(/(\d+)/);
 
-                            if (matches) {
-                                console.log("Card readed", matches[0].substring(0, 7));
-                                this.socketService.emit('card-scanned', matches[0].substring(0, 7))
+                                if (matches) {
+                                    console.log("Card readed", matches[0].substring(0, 7));
+                                    this.socketService.emit('card-scanned', matches[0].substring(0, 7))
+                                }
+
+
+
+                                //SECTOR 3: 000000000000ff078069ffffffffffff
+                                //SECTOR 4: 5a38374150504b3550394c4400000000
+                                //SECTOR 5: 31323939383039320000000000000000
+                                //SECTOR 7: 000000000000ff078069ffffffffffff
+                                //11 000000000000ff078069ffffffffffff
+                                //15 000000000000ff078069ffffffffffff
+                                // Print the data
+                                // console.log(`Data from ${reader.reader.name}:`, data.toString('hex'));
+                            } catch (err) {
+                                console.error(`Error when reading card`, err);
                             }
-
-
-
-                            //SECTOR 3: 000000000000ff078069ffffffffffff
-                            //SECTOR 4: 5a38374150504b3550394c4400000000
-                            //SECTOR 5: 31323939383039320000000000000000
-                            //SECTOR 7: 000000000000ff078069ffffffffffff
-                            //11 000000000000ff078069ffffffffffff
-                            //15 000000000000ff078069ffffffffffff
-                            // Print the data
-                            // console.log(`Data from ${reader.reader.name}:`, data.toString('hex'));
-                        } catch (err) {
-                            console.error(`Error when reading card`, err);
                         }
-                    }
+                    });
+
+                    reader.on('card.off', card => {
+                        // console.log(`${reader.reader.name}  card removed`, card);
+                    });
+
+                    reader.on('error', err => {
+                        console.log(`${reader.reader.name}  an error occurred`, err);
+                    });
+
+                    reader.on('end', () => {
+                        // console.log(`${reader.reader.name}  device removed`);
+                    });
+
                 });
 
-                reader.on('card.off', card => {
-                    // console.log(`${reader.reader.name}  card removed`, card);
+                nfc.on('error', err => {
+                    console.log('an error occurred', err);
                 });
-
-                reader.on('error', err => {
-                    console.log(`${reader.reader.name}  an error occurred`, err);
-                });
-
-                reader.on('end', () => {
-                    // console.log(`${reader.reader.name}  device removed`);
-                });
-
-            });
-
-            nfc.on('error', err => {
-                console.log('an error occurred', err);
-            });
+            }
         }
     }
     // }

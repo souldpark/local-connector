@@ -1,7 +1,7 @@
 {
   "name": "local-connector",
   "friendlyName": "Local Connector",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Local Connector Service",
   "main": "main.js",
   "scripts": {

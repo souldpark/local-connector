@@ -63,4 +63,22 @@ export class ConfigurationController implements interfaces.Controller {
       response.status(status.INTERNAL_SERVER_ERROR).send(error);
     }
   }
+
+  @httpGet('/:type')
+  public async delete(
+    @request() request: Request,
+    @response() response: Response,
+    @next() next: NextFunction,
+    @requestParam('type') type: string
+  ): Promise<void> {
+    try {
+      this.configService.delete(type);
+
+      response.status(status.NO_CONTENT).send();
+    } catch (error: any) {
+      this.logService.error(error)
+      response.status(status.INTERNAL_SERVER_ERROR).send(error);
+    }
+  }
+
 }

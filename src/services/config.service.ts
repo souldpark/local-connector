@@ -24,6 +24,13 @@ export class ConfigService {
     return nconf.get(key)
   }
 
+  public delete(key: string): any {
+    nconf.remove(key)
+    nconf.save((err) => {
+      console.log("Configuration saved")
+    })
+  }
+
   public set(key: string, value: any) {
     nconf.set(key, value)
     nconf.save((err) => {
