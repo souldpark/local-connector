@@ -11,5 +11,5 @@
     },
     "depends": ["python", "nodejs", "mkcert"],
     "post_install": ["cd $dir", "npm install --omit=dev", "mkcert -cert-file local-connector.pem -key-file local-connector-key.pem localhost", "node winservice.js install"],
-    "pre_uninstall": ["cd $dir", "node winservice.js uninstall"]
+    "pre_uninstall": ["cd $dir", "node winservice.js uninstall", "cd /"]
 }
