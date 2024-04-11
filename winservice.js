@@ -5,6 +5,9 @@ var svc = new Service({
     name: 'Local Connector',
     description: 'Interface between the computer and the SoludPark website',
     script: 'main.js',
+    env: {
+        NODE_EXTRA_CA_CERTS: '$(mkcert -CAROOT)/rootCA.pem'
+    },
     nodeOptions: [
         '--harmony',
         '--max_old_space_size=4096'
