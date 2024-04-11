@@ -5,6 +5,9 @@ var svc = new Service({
     name: 'Local Connector',
     description: 'Interface between the computer and the SoludPark website',
     script: 'main.js',
+    permissions: {
+        interactWithDesktop: true
+    },
     env: [{
         name: "NODE_EXTRA_CA_CERTS",
         value: "rootCA.pem"
