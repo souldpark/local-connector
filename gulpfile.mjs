@@ -51,6 +51,11 @@ gulp.task("copy-service-installer", function () {
         .pipe(gulp.dest('./dist'));
 });
 
+gulp.task("copy-certificates", function () {
+    return gulp.src('./*.pem')
+        .pipe(gulp.dest('./dist'));
+});
+
 
 gulp.task('zip', function () {
     return gulp.src('./dist/**')
@@ -118,6 +123,7 @@ gulp.task(
         "copy-package-lock-json",
         "build-local-connector",
         "copy-service-installer",
+        "copy-certificates",
         "zip",
         "update-scoop-definition",
         "release",
