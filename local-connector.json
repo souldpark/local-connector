@@ -10,6 +10,6 @@
         }
     },
     "depends": ["python", "nodejs"],
-    "post_install": ["cd $dir", "npm install --omit=dev", "node winservice.js install"],
-    "pre_uninstall": ["cd $dir", "node winservice.js uninstall"]
+    "post_install": ["cd $dir", "npm install --omit=dev", "node winservice.js install", "cd ../../"],
+    "pre_uninstall": ["cd $dir", "node winservice.js uninstall", "cd ../../"]
 }
