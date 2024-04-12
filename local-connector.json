@@ -1,12 +1,12 @@
 {
-    "version": "1.0.25",
+    "version": "1.0.26",
     "homepage": "https://addlayer.io",
     "description": "Local connector for SouldPark",
     "license": "License information",
     "architecture": {
         "64bit": {
-            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.25/local-connector.zip",
-            "hash": "b5974281e3d475a707a735a3f64e38cd88a3982493cf0f26d25de28c6efc4ff7"
+            "url": "https://github.com/souldpark/local-connector/releases/download/1.0.26/local-connector.zip",
+            "hash": "500487c6a1a895d57e624e06cf2d5e7d345dd461cff15f9c99971ba230448646"
         }
     },
     "depends": ["python", "nodejs", "mkcert"],
